@@ -76,6 +76,39 @@ module.exports = {
             status : "success",
             datas : datas
         })
+    },
+    postAvailableNum : async (req,res)=>{
+        console.log(req.body)
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("availablenumber");
+        datas = await collection.insertOne({
+            tanggal :req.body.tanggal,
+            jumlahnomor : req.body.jumlahnomor,
+            nomor : req.body.nomor
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    postNumberList : async (req,res)=>{
+        console.log(req.body)
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlist");
+        datas = await collection.insertOne({
+            tanggal : req.body.tanggal,
+            nomorsurat : req.body.nomorsurat,
+            perihal :req.body.perihal,
+            dasarhukum : req.body.dasarhukum,
+            pembuatsurat : req.body.pembuatsurat,
+            tujuan : req.body.tujuan,
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
     }
 
 }
