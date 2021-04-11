@@ -1,3 +1,4 @@
+const { ObjectId } = require("bson");
 const connectionHandler = require("../database/db");
 let connection, database, collection, datas;
 module.exports = {
@@ -72,6 +73,7 @@ module.exports = {
         database = connection.db("nomorsurat");
         collection = database.collection("numberlist");
         datas = await collection.find({}).sort({"nomorsurat" : 1}).toArray()
+        console.log(datas.map(data=> data.nomorsurat))
         res.json({
             status : "success",
             datas : datas
@@ -104,6 +106,19 @@ module.exports = {
             dasarhukum : req.body.dasarhukum,
             pembuatsurat : req.body.pembuatsurat,
             tujuan : req.body.tujuan,
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    deleteNumberList : async(req,res)=>{
+        console.log(ObjectId(req.params.id))
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlist");
+        datas = await collection.deleteOne({
+            _id : ObjectId(req.params.id)
         })
         res.json({
             status : "success",

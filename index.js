@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const handler = require("./handler/dbHandler");
+const services = require("./handler/services");
+const config = require("./config.json");
 const cors = require("cors");
 const app = express();
 const api = express();
@@ -20,4 +22,5 @@ api.get("/number/numberlist/search",cors(), handler.getNumberListByDate);
 api.get("/number/numberlist",cors(),handler.getNumberList);
 api.post("/number/availablenumber",cors(), handler.postAvailableNum);
 api.post("/number/numberlist",cors(), handler.postNumberList);
-app.listen(2000);
+api.post("/number/numberlist/id/:id",cors(), handler.deleteNumberList);
+app.listen(config.port, services.checkConnection);

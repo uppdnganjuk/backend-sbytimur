@@ -1,4 +1,5 @@
 {
     "dbPass" : "Saranghae100",
-    "dbName" : "laporjual"
+    "dbName" : "laporjual",
+    "port" : 2000
 }
