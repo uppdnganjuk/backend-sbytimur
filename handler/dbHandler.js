@@ -124,6 +124,60 @@ module.exports = {
             status : "success",
             messages : datas
         })
+    },
+    getNumberListByDateMasuk : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlistmasuk");
+        datas = await collection.find({
+            "tanggal" : req.query.tanggal
+        }).sort({"nomorsurat" : 1}).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getNumberListMasuk : async (req,res) => {
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlistmasuk");
+        datas = await collection.find({}).sort({"nomorsurat" : 1}).toArray()
+        console.log(datas.map(data=> data.nomorsurat))
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    postNumberListMasuk : async (req,res)=>{
+        console.log(req.body)
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlistmasuk");
+        datas = await collection.insertOne({
+            tanggal : req.body.tanggal,
+            nomorsurat : req.body.nomorsurat,
+            perihal :req.body.perihal,
+            dasarhukum : req.body.dasarhukum,
+            pembuatsurat : req.body.pembuatsurat,
+            tujuan : req.body.tujuan,
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    deleteNumberListMasuk : async(req,res)=>{
+        console.log(ObjectId(req.params.id))
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlistmasuk");
+        datas = await collection.deleteOne({
+            _id : ObjectId(req.params.id)
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
     }
 
 }
