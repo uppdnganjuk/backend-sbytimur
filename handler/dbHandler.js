@@ -178,6 +178,21 @@ module.exports = {
             status : "success",
             messages : datas
         })
+    },
+    getNumberListByDateSpec : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlist");
+        datas = await collection.find({ 
+            tanggal : {
+                $gte: new Date(req.params.gt),
+                $lte:new Date(req.params.lt)
+            }
+        }).sort({"nomorsurat" : 1}).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
     }
 
 }

@@ -22,6 +22,7 @@ api.get("/number/numberlist/search",cors(), handler.getNumberListByDate);
 api.get("/number/numberlist",cors(),handler.getNumberList);
 api.get("/number/numberlistmasuk",cors(),handler.getNumberListMasuk);
 api.get("/number/numberlistmasuk/search",cors(),handler.getNumberListByDateMasuk);
+api.get("/number/numberlist/search/:gt/:lt", cors(), handler.getNumberListByDateSpec);
 api.post("/number/numberlistmasuk",cors(),handler.postNumberListMasuk);
 api.post("/number/availablenumber",cors(), handler.postAvailableNum);
 api.post("/number/numberlist",cors(), handler.postNumberList);
