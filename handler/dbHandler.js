@@ -60,9 +60,14 @@ module.exports = {
         connection = await connectionHandler();
         database = connection.db("nomorsurat");
         collection = database.collection("numberlist");
+        console.log(new Date(req.query.tanggal))
         datas = await collection.find({
-            "tanggal" : req.query.tanggal
+            tanggal : {
+                $lte : new Date(req.query.tanggal),
+                $gte : new Date(req.query.tanggal)
+            }
         }).sort({"nomorsurat" : 1}).toArray()
+        console.log(datas)
         res.json({
             status : "success",
             datas : datas
@@ -100,7 +105,7 @@ module.exports = {
         database = connection.db("nomorsurat");
         collection = database.collection("numberlist");
         datas = await collection.insertOne({
-            tanggal : req.body.tanggal,
+            tanggal : new Date(req.body.tanggal),
             nomorsurat : req.body.nomorsurat,
             perihal :req.body.perihal,
             dasarhukum : req.body.dasarhukum,
