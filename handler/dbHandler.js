@@ -73,6 +73,21 @@ module.exports = {
             datas : datas
         })
     },
+    getNumberListByDateEntry : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlist");
+        datas = await collection.find({ 
+            entrydate : {
+                $gte: new Date(req.params.gt),
+                $lte:new Date(req.params.lt)
+            }
+        }).sort({"nomorsurat" : 1}).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
     getNumberList : async (req,res) => {
         connection = await connectionHandler();
         database = connection.db("nomorsurat");
@@ -106,6 +121,7 @@ module.exports = {
         collection = database.collection("numberlist");
         datas = await collection.insertOne({
             tanggal : new Date(req.body.tanggal),
+            entrydate : new Date(req.body.entrydate),
             nomorsurat : req.body.nomorsurat,
             perihal :req.body.perihal,
             dasarhukum : req.body.dasarhukum,
@@ -122,6 +138,19 @@ module.exports = {
         connection = await connectionHandler();
         database = connection.db("nomorsurat");
         collection = database.collection("numberlist");
+        datas = await collection.deleteOne({
+            _id : ObjectId(req.params.id)
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    deleteNumberAvailable : async(req,res)=>{
+        console.log(ObjectId(req.params.id))
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("availablenumber");
         datas = await collection.deleteOne({
             _id : ObjectId(req.params.id)
         })
@@ -194,6 +223,23 @@ module.exports = {
                 $lte:new Date(req.params.lt)
             }
         }).sort({"nomorsurat" : 1}).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getAllPhoneNumber : async ()=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorhp");
+        collection = database.collection("nomorhp");
+        datas = await collection.find({}).toArray();
+        return datas;
+    },
+    getAllPhoneByUser : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorhp");
+        collection = database.collection("nomorhp");
+        datas = await collection.find({}).toArray();
         res.json({
             status : "success",
             datas : datas
