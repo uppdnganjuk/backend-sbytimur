@@ -60,6 +60,10 @@ api.post("/number/numberlist/id/:id",cors(), handler.deleteNumberList);
 api.post("/number/availablenumber/delete/:id",cors(), handler.deleteNumberAvailable);
 api.post("/hp/sendAllPhone",cors(),services.whatsAppPush);
 api.get("/hp/getAllPhone",cors(),handler.getAllPhoneByUser);
+api.get("/pig/user/:nik",cors(),handler.getUserPIG);
+api.get("/pig/user/institution/:institution",cors(),handler.getUserPIGbyInstitute);
+api.get("/pig/admin/report",cors(),handler.getAllReport);
+api.post("/pig/user/sendreport",cors(),handler.sendReport)
 app.listen(config.port, services.checkConnection);
 
 
