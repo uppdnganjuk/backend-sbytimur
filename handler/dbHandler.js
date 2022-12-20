@@ -34,6 +34,61 @@ module.exports = {
             messages : datas
         })
     },
+    getUserPIG : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("pig");
+        collection = database.collection("user");
+        console.log(req.query.nik)
+        datas = await collection.find({
+            "nik" : req.params.nik
+        }).toArray();
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getUserPIGbyInstitute : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("pig");
+        collection = database.collection("user");
+        console.log(req.params.institution)
+        datas = await collection.find({
+            "instansi" : req.params.institution
+        }).toArray();
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getAllReport : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("pig");
+        collection = database.collection("laporan");
+        console.log(req.params.institution)
+        datas = await collection.find({}).toArray();
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    sendReport : async (req,res)=>{
+        console.log(req.body.inspelapor)
+        connection = await connectionHandler();
+        database = connection.db("pig");
+        collection = database.collection("laporan");
+        datas = await collection.insertOne({
+            inspelapor :req.body.inspelapor,
+            insterlapor : req.body.insterlapor,
+            laporan : req.body.laporan,
+            pelapor : req.body.pelapor,
+            terlapor : req.body.terlapor
+        })
+        res.json({
+            status : "success",
+            
+            messages : datas
+        })
+    },
     getAvailableNum : async (req,res)=>{
         connection = await connectionHandler();
         database = connection.db("nomorsurat");
