@@ -119,19 +119,30 @@ module.exports = {
         connection = await connectionHandler();
         database = connection.db("nomorsurat");
         collection = database.collection("numberlist");
-        datas = await collection.insertOne({
-            tanggal : new Date(req.body.tanggal),
-            entrydate : new Date(req.body.entrydate),
-            nomorsurat : req.body.nomorsurat,
-            perihal :req.body.perihal,
-            dasarhukum : req.body.dasarhukum,
-            pembuatsurat : req.body.pembuatsurat,
-            tujuan : req.body.tujuan,
-        })
-        res.json({
-            status : "success",
-            messages : datas
-        })
+        avaiblecheck = await collection.find({"nomorsurat":req.body.nomorsurat,"tanggal":new Date(req.body.tanggal)}).toArray()
+        console.log("isAvailable")
+        console.log(avaiblecheck)
+        console.log(avaiblecheck.length)
+        if(avaiblecheck.length == 0){
+            datas = await collection.insertOne({
+                tanggal : new Date(req.body.tanggal),
+                entrydate : new Date(),
+                nomorsurat : req.body.nomorsurat,
+                perihal :req.body.perihal,
+                dasarhukum : req.body.dasarhukum,
+                pembuatsurat : req.body.pembuatsurat,
+                tujuan : req.body.tujuan,
+            })
+            res.json({
+                status : "success",
+                messages : datas
+            })
+        }else{
+            res.json({
+                status : "exist",
+                message : "none"
+            })
+        }
     },
     deleteNumberList : async(req,res)=>{
         console.log(ObjectId(req.params.id))
@@ -223,6 +234,16 @@ module.exports = {
                 $lte:new Date(req.params.lt)
             }
         }).sort({"nomorsurat" : 1}).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getRecentNumberList : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlist")
+        datas = await collection.find({}).sort({"entrydate":-1}).limit(parseInt(req.params.number)).toArray()
         res.json({
             status : "success",
             datas : datas

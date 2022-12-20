@@ -47,6 +47,7 @@ api.post("/insertData",handler.insertData);
 api.get("/number/availablenumber",cors(), handler.getAvailableNum);
 api.get("/number/availablenumber/search",cors(), handler.getAvailableNumByDate);
 api.get("/number/numberlist/search",cors(), handler.getNumberListByDate);
+api.get("/number/numberlist/search/recent/:number",cors(), handler.getRecentNumberList);
 api.get("/number/numberlist/search/byentry/:gt/:lt",cors(), handler.getNumberListByDateEntry);
 api.get("/number/numberlist",cors(),handler.getNumberList);
 api.get("/number/numberlistmasuk",cors(),handler.getNumberListMasuk);
