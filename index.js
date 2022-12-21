@@ -36,18 +36,21 @@ let getApiandEmit = (socket)=>{
 }
 
 const router = app.use("/api",api);
-api.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+api.use(function(req,res,next){
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+  next()
+})
 api.use(bodyParser.json())
+
 api.get("/",cors(), handler.getAllDatas);
 api.post("/insertData",handler.insertData);
 api.get("/number/availablenumber",cors(), handler.getAvailableNum);
 api.get("/number/availablenumber/search",cors(), handler.getAvailableNumByDate);
 api.get("/number/numberlist/search",cors(), handler.getNumberListByDate);
 api.get("/number/numberlist/search/recent/:number",cors(), handler.getRecentNumberList);
+api.put("/number/numberlist/update",cors(), handler.updateNumberList)
 api.get("/number/numberlist/search/byentry/:gt/:lt",cors(), handler.getNumberListByDateEntry);
 api.get("/number/numberlist",cors(),handler.getNumberList);
 api.get("/number/numberlistmasuk",cors(),handler.getNumberListMasuk);

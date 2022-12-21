@@ -304,6 +304,27 @@ module.exports = {
             datas : datas
         })
     },
+    updateNumberList : async(req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat");
+        collection = database.collection("numberlist");
+        let query = {"nomorsurat":req.body.nomorsurat,"tanggal":new Date(req.body.tanggal)}
+        const update = {$set:{
+            tanggal : new Date(req.body.tanggal),
+            nomorsurat : req.body.nomorsurat,
+            perihal :req.body.perihal,
+            dasarhukum : req.body.dasarhukum,
+            pembuatsurat : req.body.pembuatsurat,
+            tujuan : req.body.tujuan,
+        }}
+        console.log(update)
+        datas = await collection.updateOne(query,update,{})
+        res.header("Access-Control-Allow-Methods", "PUT");
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
     getAllPhoneNumber : async ()=>{
         connection = await connectionHandler();
         database = connection.db("nomorhp");
