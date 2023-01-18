@@ -12,6 +12,25 @@ module.exports = {
             datas : datas
          })
     },
+    sentWAstatus: async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("whatsapush");
+        collection = database.collection("sent");
+        datas = await collection.insertOne({
+            success : req.body.success,
+            unregistered : req.body.unregistered,
+            unvalid : req.body.unvalid,
+            none : req.body.none,
+            total : req.body.total,
+            date : new Date(),
+            city : req.body.city
+        })
+        res.json({
+            status : "success",
+            datas : req.body
+        })
+
+        },
     insertData : async (req,res)=>{
         connection = await connectionHandler();
         database = connection.db("laporjual");
