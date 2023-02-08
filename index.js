@@ -47,6 +47,7 @@ api.use(bodyParser.json())
 api.get("/",cors(), handler.getAllDatas);
 api.post("/insertData",handler.insertData);
 api.post("/whatsapush/sentrecap",handler.sentWAstatus)
+api.get("/whatsapush/laporan",handler.sentWAreport)
 api.get("/number/availablenumber",cors(), handler.getAvailableNum);
 api.get("/number/availablenumber/search",cors(), handler.getAvailableNumByDate);
 api.get("/number/numberlist/search",cors(), handler.getNumberListByDate);

@@ -31,6 +31,16 @@ module.exports = {
         })
 
         },
+    sentWAreport : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("whatsapush");
+        collection = database.collection("sent");
+        datas = await collection.find({}).sort({"date":-1}).toArray();
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
     insertData : async (req,res)=>{
         connection = await connectionHandler();
         database = connection.db("laporjual");
