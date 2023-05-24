@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const handler = require("./handler/dbHandler");
+const Sinoutsu = require("./handler/dbSinoutsu");
 const services = require("./handler/services");
 const config = require("./config.json");
 const cors = require("cors");
@@ -48,22 +49,24 @@ api.get("/",cors(), handler.getAllDatas);
 api.post("/insertData",handler.insertData);
 api.post("/whatsapush/sentrecap",handler.sentWAstatus)
 api.get("/whatsapush/laporan",handler.sentWAreport)
-api.get("/number/availablenumber",cors(), handler.getAvailableNum);
-api.get("/number/availablenumber/search",cors(), handler.getAvailableNumByDate);
-api.get("/number/numberlist/search",cors(), handler.getNumberListByDate);
-api.get("/number/numberlist/search/recent/:number",cors(), handler.getRecentNumberList);
-api.put("/number/numberlist/update",cors(), handler.updateNumberList)
-api.get("/number/numberlist/search/byentry/:gt/:lt",cors(), handler.getNumberListByDateEntry);
-api.get("/number/numberlist",cors(),handler.getNumberList);
-api.get("/number/numberlistmasuk",cors(),handler.getNumberListMasuk);
-api.get("/number/numberlistmasuk/search",cors(),handler.getNumberListByDateMasuk);
-api.get("/number/numberlist/search/bynumber/:gt/:lt", cors(), handler.getNumberListByDateSpec);
-api.post("/number/numberlistmasuk",cors(),handler.postNumberListMasuk);
-api.post("/number/availablenumber",cors(), handler.postAvailableNum);
-api.post("/number/numberlist",cors(), handler.postNumberList);
-api.post("/number/numberlistmasuk/id/:id",cors(),handler.deleteNumberListMasuk);
-api.post("/number/numberlist/id/:id",cors(), handler.deleteNumberList);
-api.post("/number/availablenumber/delete/:id",cors(), handler.deleteNumberAvailable);
+
+api.get("/number/availablenumber",cors(), Sinoutsu.getAvailableNum);
+api.get("/number/availablenumber/search",cors(), Sinoutsu.getAvailableNumByDate);
+api.get("/number/numberlist/search",cors(), Sinoutsu.getNumberListByDate);
+api.get("/number/numberlist/search/recent/:number",cors(), Sinoutsu.getRecentNumberList);
+api.put("/number/numberlist/update",cors(), Sinoutsu.updateNumberList)
+api.get("/number/numberlist/search/byentry/:gt/:lt",cors(), Sinoutsu.getNumberListByDateEntry);
+api.get("/number/numberlist",cors(),Sinoutsu.getNumberList);
+api.get("/number/numberlistmasuk",cors(),Sinoutsu.getNumberListMasuk);
+api.get("/number/numberlistmasuk/search",cors(),Sinoutsu.getNumberListByDateMasuk);
+api.get("/number/numberlist/search/bynumber/:gt/:lt", cors(), Sinoutsu.getNumberListByDateSpec);
+api.post("/number/numberlistmasuk",cors(),Sinoutsu.postNumberListMasuk);
+api.post("/number/availablenumber",cors(), Sinoutsu.postAvailableNum);
+api.post("/number/numberlist",cors(), Sinoutsu.postNumberList);
+api.post("/number/numberlistmasuk/id/:id",cors(),Sinoutsu.deleteNumberListMasuk);
+api.post("/number/numberlist/id/:id",cors(), Sinoutsu.deleteNumberList);
+api.post("/number/availablenumber/delete/:id",cors(), Sinoutsu.deleteNumberAvailable);
+
 api.post("/hp/sendAllPhone",cors(),services.whatsAppPush);
 api.get("/hp/getAllPhone",cors(),handler.getAllPhoneByUser);
 api.get("/pig/user/:nik",cors(),handler.getUserPIG);

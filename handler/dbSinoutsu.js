@@ -1,0 +1,245 @@
+const { ObjectId } = require("bson");
+const connectionHandler = require("../database/db");
+let connection, database, collection, datas;
+
+module.exports = {
+    getAvailableNum : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("availablenumber");
+        datas = await collection.find({}).toArray();
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getAvailableNumByDate : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("availablenumber");
+        datas = await collection.find({
+            "tanggal" : req.query.tanggal
+        }).toArray();
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getNumberListByDate : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlist");
+        console.log(new Date(req.query.tanggal))
+        datas = await collection.find({
+            tanggal : {
+                $lte : new Date(req.query.tanggal),
+                $gte : new Date(req.query.tanggal)
+            }
+        }).sort({"nomorsurat" : 1}).toArray()
+        console.log(datas)
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getNumberListByDateEntry : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlist");
+        datas = await collection.find({ 
+            entrydate : {
+                $gte: new Date(req.params.gt),
+                $lte:new Date(req.params.lt)
+            }
+        }).sort({"nomorsurat" : 1}).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getNumberList : async (req,res) => {
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlist");
+        datas = await collection.find({}).sort({"nomorsurat" : 1}).toArray()
+        console.log(datas.map(data=> data.nomorsurat))
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    postAvailableNum : async (req,res)=>{
+        console.log(req.body)
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("availablenumber");
+        datas = await collection.insertOne({
+            tanggal :req.body.tanggal,
+            jumlahnomor : req.body.jumlahnomor,
+            nomor : req.body.nomor
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    postNumberList : async (req,res)=>{
+        console.log(req.body)
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlist");
+        avaiblecheck = await collection.find({"nomorsurat":req.body.nomorsurat,"tanggal":new Date(req.body.tanggal)}).toArray()
+        console.log("isAvailable")
+        console.log(avaiblecheck)
+        console.log(avaiblecheck.length)
+        if(avaiblecheck.length == 0){
+            datas = await collection.insertOne({
+                tanggal : new Date(req.body.tanggal),
+                entrydate : new Date(),
+                nomorsurat : req.body.nomorsurat,
+                perihal :req.body.perihal,
+                dasarhukum : req.body.dasarhukum,
+                pembuatsurat : req.body.pembuatsurat,
+                tujuan : req.body.tujuan,
+            })
+            res.json({
+                status : "success",
+                messages : datas
+            })
+        }else{
+            res.json({
+                status : "exist",
+                message : "none"
+            })
+        }
+    },
+    deleteNumberList : async(req,res)=>{
+        console.log(ObjectId(req.params.id))
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlist");
+        datas = await collection.deleteOne({
+            _id : ObjectId(req.params.id)
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    deleteNumberAvailable : async(req,res)=>{
+        console.log(ObjectId(req.params.id))
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("availablenumber");
+        datas = await collection.deleteOne({
+            _id : ObjectId(req.params.id)
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    getNumberListByDateMasuk : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlistmasuk");
+        datas = await collection.find({
+            "tanggal" : req.query.tanggal
+        }).sort({"nomorsurat" : 1}).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getNumberListMasuk : async (req,res) => {
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlistmasuk");
+        datas = await collection.find({}).sort({"nomorsurat" : 1}).toArray()
+        console.log(datas.map(data=> data.nomorsurat))
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    postNumberListMasuk : async (req,res)=>{
+        console.log(req.body)
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlistmasuk");
+        datas = await collection.insertOne({
+            tanggal : req.body.tanggal,
+            nomorsurat : req.body.nomorsurat,
+            perihal :req.body.perihal,
+            dasarhukum : req.body.dasarhukum,
+            pembuatsurat : req.body.pembuatsurat,
+            tujuan : req.body.tujuan,
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    deleteNumberListMasuk : async(req,res)=>{
+        console.log(ObjectId(req.params.id))
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlistmasuk");
+        datas = await collection.deleteOne({
+            _id : ObjectId(req.params.id)
+        })
+        res.json({
+            status : "success",
+            messages : datas
+        })
+    },
+    getNumberListByDateSpec : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlist");
+        datas = await collection.find({ 
+            tanggal : {
+                $gte: new Date(req.params.gt),
+                $lte:new Date(req.params.lt)
+            }
+        }).sort({"nomorsurat" : 1}).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    getRecentNumberList : async (req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlist")
+        datas = await collection.find({}).sort({"entrydate":-1}).limit(parseInt(req.params.number)).toArray()
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+    updateNumberList : async(req,res)=>{
+        connection = await connectionHandler();
+        database = connection.db("nomorsurat-timur");
+        collection = database.collection("numberlist");
+        let query = {"nomorsurat":req.body.nomorsurat,"tanggal":new Date(req.body.tanggal)}
+        const update = {$set:{
+            tanggal : new Date(req.body.tanggal),
+            nomorsurat : req.body.nomorsurat,
+            perihal :req.body.perihal,
+            dasarhukum : req.body.dasarhukum,
+            pembuatsurat : req.body.pembuatsurat,
+            tujuan : req.body.tujuan,
+        }}
+        console.log(update)
+        datas = await collection.updateOne(query,update,{})
+        res.header("Access-Control-Allow-Methods", "PUT");
+        res.json({
+            status : "success",
+            datas : datas
+        })
+    },
+
+
+
+}
